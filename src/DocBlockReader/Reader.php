@@ -6,9 +6,10 @@ class Reader
 {
     private $rawDocBlock;
     private $parameters;
-    private $keyPattern = "[A-z0-9\_\-]+";
-    private $endPattern = "[ ]*(?:@|\r\n|\n)";
-    private $parsedAll  = false;
+    private $parsedAll = false;
+
+    const keyPattern = '[A-z0-9\_\-]+';
+    const endPattern = "[ ]*(?:@|\r\n|\n)";
 
     public function __construct()
     {
@@ -28,8 +29,8 @@ class Reader
                 $reflection = new \ReflectionMethod($arguments[0], $arguments[1]);
             } else if ($type === "property") {
                 $reflection = new \ReflectionProperty($arguments[0], $arguments[1]);
-			} else if($type === "constant") {
-				$reflection = new \ReflectionClassConstant($arguments[0], $arguments[1]);
+            } else if ($type === "constant") {
+                $reflection = new \ReflectionClassConstant($arguments[0], $arguments[1]);
             }
         }
 
@@ -42,10 +43,10 @@ class Reader
         if (isset($this->parameters[$key])) {
             return $this->parameters[$key];
         } else {
-            if (preg_match("/@" . preg_quote($key) . $this->endPattern . "/", $this->rawDocBlock, $match)) {
+            if (preg_match("/@" . preg_quote($key) . self::endPattern . "/", $this->rawDocBlock, $match)) {
                 return true;
             } else {
-                preg_match_all("/@" . preg_quote($key) . " (.*)" . $this->endPattern . "/U", $this->rawDocBlock, $matches);
+                preg_match_all("/@" . preg_quote($key) . " (.*)" . self::endPattern . "/U", $this->rawDocBlock, $matches);
                 $size = sizeof($matches[1]);
 
                 // not found
@@ -69,19 +70,19 @@ class Reader
 
     private function parse()
     {
-        $pattern = "/@(?=(.*)" . $this->endPattern . ")/U";
+        $pattern = "/@(?=(.*)" . self::endPattern . ")/U";
 
         preg_match_all($pattern, $this->rawDocBlock, $matches);
 
         foreach ($matches[1] as $rawParameter) {
-            if (preg_match("/^(" . $this->keyPattern . ") (.*)$/", $rawParameter, $match)) {
+            if (preg_match("/^(" . self::keyPattern . ") (.*)$/", $rawParameter, $match)) {
                 $parsedValue = $this->parseValue($match[2]);
                 if (isset($this->parameters[$match[1]])) {
                     $this->parameters[$match[1]] = array_merge((array)$this->parameters[$match[1]], (array)$parsedValue);
                 } else {
                     $this->parameters[$match[1]] = $parsedValue;
                 }
-            } else if (preg_match("/^" . $this->keyPattern . "$/", $rawParameter, $match)) {
+            } else if (preg_match("/^" . self::keyPattern . "$/", $rawParameter, $match)) {
                 $this->parameters[$rawParameter] = true;
             } else {
                 $this->parameters[$rawParameter] = null;
