@@ -4,8 +4,11 @@ namespace frostbane\DocBlockReader;
 
 class Reader
 {
+    /** @var string */
     private $rawDocBlock;
+    /** @var array */
     private $parameters;
+    /** @var bool */
     private $parsedAll = false;
 
     const keyPattern = '[A-z0-9\_\-]+';
@@ -38,6 +41,10 @@ class Reader
         $this->parameters  = array();
     }
 
+    /**
+     * @param  string $key
+     * @return mixed
+     */
     private function parseSingle($key)
     {
         if (isset($this->parameters[$key])) {
@@ -90,6 +97,9 @@ class Reader
         }
     }
 
+    /**
+     * @param string $name
+     */
     public function getVariableDeclarations($name)
     {
         $declarations = (array)$this->getParameter($name);
@@ -106,8 +116,7 @@ class Reader
         $type = gettype($declaration);
 
         if ($type !== 'string') {
-            throw new \InvalidArgumentException(
-                "Raw declaration must be string, $type given. Key='$name'.");
+            throw new \InvalidArgumentException("Raw declaration must be string, $type given. Key='$name'.");
         }
 
         if (strlen($declaration) === 0) {
@@ -130,6 +139,10 @@ class Reader
         return $declaration;
     }
 
+    /**
+     * @param  string $originalValue
+     * @return mixed
+     */
     private function parseValue($originalValue)
     {
         if ($originalValue && $originalValue !== 'null') {
@@ -154,6 +167,9 @@ class Reader
         return $value;
     }
 
+    /**
+     * @return array
+     */
     public function getParameters()
     {
         if (!$this->parsedAll) {
@@ -164,6 +180,9 @@ class Reader
         return $this->parameters;
     }
 
+    /**
+     * @param string $key
+     */
     public function getParameter($key)
     {
         return $this->parseSingle($key);
