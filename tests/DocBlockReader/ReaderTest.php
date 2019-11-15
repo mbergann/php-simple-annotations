@@ -16,10 +16,13 @@ use PHPUnit\Framework\TestCase;
  *
  * @trueVar
  * @null-var     null
+ * @string4 "null"
  *
  * @booleanTrue  true
  * @string3      tRuE
  * @booleanFalse false
+ * @string5 "true"
+ * @string6 "false"
  * @booleanNull  null
  *
  */
@@ -36,10 +39,13 @@ class ReaderTest extends TestCase
      *
      * @trueVar
      * @null-var     null
+     * @string4 "null"
      *
      * @booleanTrue  true
      * @string3      tRuE
      * @booleanFalse false
+     * @string5 "true"
+     * @string6 "false"
      * @booleanNull  null
      *
      */
@@ -100,6 +106,11 @@ class ReaderTest extends TestCase
 
         $this->assertArrayHasKey('number', $parameters);
         $this->assertArrayHasKey('string', $parameters);
+        $this->assertArrayHasKey('string2', $parameters);
+        $this->assertArrayHasKey('string3', $parameters);
+        $this->assertArrayHasKey('string4', $parameters);
+        $this->assertArrayHasKey('string5', $parameters);
+        $this->assertArrayHasKey('string6', $parameters);
         $this->assertArrayHasKey('array', $parameters);
         $this->assertArrayHasKey('object', $parameters);
         $this->assertArrayHasKey('nested', $parameters);
@@ -123,6 +134,8 @@ class ReaderTest extends TestCase
 
         $this->assertSame(true, $parameters['booleanTrue']);
         $this->assertSame("tRuE", $parameters['string3']);
+        $this->assertSame("true", $parameters['string5']);
+        $this->assertSame("false", $parameters['string6']);
         $this->assertSame(false, $parameters['booleanFalse']);
         $this->assertSame(null, $parameters['booleanNull']);
     }
@@ -188,10 +201,13 @@ class ReaderTest extends TestCase
      *
      * @trueVar
      * @null-var     null
+     * @string4 "null"
      *
      * @booleanTrue  true
      * @string3      tRuE
      * @booleanFalse false
+     * @string5 "true"
+     * @string6 "false"
      * @booleanNull  null
      *
      */
