@@ -2,7 +2,7 @@
     "name"        : "frostbane/php-simple-annotations",
     "description" : "Simple annotation parser",
     "type"        : "package",
-    "homepage"    : "https://frostbane.nodetransit.com",
+    "homepage"    : "https://packagist.org/packages/frostbane/php-simple-annotations",
     "keywords"    : [
         "annotations",
         "annotation",
@@ -14,6 +14,11 @@
         {
             "name" : "Jan Święcki",
             "email": "jan.swiecki@gmail.com",
+            "role" : "Developer"
+        },
+        {
+            "name" : "USAMI Kenta",
+            "email": "tadsan@zonu.me",
             "role" : "Developer"
         },
         {
