@@ -14,17 +14,31 @@ class Reader
     const keyPattern = '[A-z0-9\_\-]+';
     const endPattern = "[ ]*(?:@|\r\n|\n)";
 
-    public function __construct()
+    public function __construct($class, $method = null, $type = null)
     {
-        $arguments = func_get_args();
-        $count     = count($arguments);
+        if (is_array($class)) {
+            $method = $class[1];
+            $class  = $class[0];
+            $type   = "method";
+        }
+
+        $arguments = array($class);
+
+        $method !== null and $arguments[] = $method;
+        $type !== null and $arguments[] = $type;
+
+        $count = count($arguments);
 
         // get reflection from class or class/method
         // (depends on constructor arguments)
         if ($count === 0) {
-            throw new \Exception("No zero argument constructor allowed");
+            throw new \DomainException("No zero argument constructor allowed");
         } else if ($count === 1) {
-            $reflection = new \ReflectionClass($arguments[0]);
+            if (is_string($arguments[0]) && function_exists($arguments[0])) {
+                $reflection = new \ReflectionFunction($arguments[0]);
+            } else {
+                $reflection = new \ReflectionClass($arguments[0]);
+            }
         } else {
             $type = $count === 3 ? $arguments[2] : "method";
 
@@ -43,6 +57,7 @@ class Reader
 
     /**
      * @param  string $key
+     *
      * @return mixed
      */
     private function parseSingle($key)
@@ -141,6 +156,7 @@ class Reader
 
     /**
      * @param  string $originalValue
+     *
      * @return mixed
      */
     private function parseValue($originalValue)

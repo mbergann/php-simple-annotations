@@ -2,12 +2,26 @@
 
 namespace frostbane\DocBlockReader\test;
 
+use function frostbane\DocBlockReader\test\model\someMethod;
 use PHPUnit\Framework\TestCase;
 use frostbane\DocBlockReader\Reader;
 use frostbane\DocBlockReader\test\model\SomeClass;
 
 class ReaderTest extends TestCase
 {
+    public function testInstance()
+    {
+        $someClass = new SomeClass();
+
+        $thisReader     = new Reader($this);
+        $classReader    = new Reader(SomeClass::class);
+        $instanceReader = new Reader($someClass);
+
+        $this->assertInstanceOf(Reader::class, $thisReader);
+        $this->assertInstanceOf(Reader::class, $classReader);
+        $this->assertInstanceOf(Reader::class, $instanceReader);
+    }
+
     public function testPropertyParsing()
     {
         $reader = new Reader(SomeClass::class, 'myVar', 'property');
@@ -37,16 +51,42 @@ class ReaderTest extends TestCase
         $this->assertSame(array("somejsonarray", "2", "anotherjsonarray", "3"), $Lalala);
     }
 
-    public function testParserOne()
+    public function testParserMethodImplicit()
     {
         $reader = new Reader(SomeClass::class, 'parserFixture');
         $this->commonTest($reader);
     }
 
+    public function testParserMethodExplicit()
+    {
+        $reader = new Reader(SomeClass::class, 'parserFixture', 'method');
+        $this->commonTest($reader);
+    }
+
+    public function testParserCallable()
+    {
+        $someClass = new SomeClass();
+        $reader1   = new Reader(array(SomeClass::class, "parserFixture"));
+        $reader2   = new Reader(array($someClass, "parserFixture"));
+
+        $this->commonTest($reader1);
+        $this->commonTest($reader2);
+    }
+
+    public function testParserStaticCallable()
+    {
+        $someClass = new SomeClass();
+        $reader1   = new Reader(array(SomeClass::class, "staticFixture"));
+        $reader2   = new Reader(array($someClass, "staticFixture"));
+
+        $this->commonTest($reader1);
+        $this->commonTest($reader2);
+    }
+
     /**
      * @param Reader $reader
      */
-    public function commonTest($reader)
+    private function commonTest($reader)
     {
         $parameters = $reader->getParameters();
 
@@ -203,6 +243,19 @@ class ReaderTest extends TestCase
         $this->assertSame(true, $parameters['ajax']);
         $this->assertSame(array("x", "y", "z"), $parameters['postParam']);
 
+    }
+
+    public function testParseFunction()
+    {
+        include_once __DIR__ . "/model/SomeMethod.php";
+
+        $method = "\\frostbane\\DocBlockReader\\test\\model\\someMethod";
+
+        $this->assertTrue(function_exists($method));
+
+        $reader = new Reader($method);
+
+        $this->commonTest($reader);
     }
 
     public function testFive()
