@@ -250,4 +250,20 @@ class ReaderTest extends TestCase
             array('fixtureBadVariableDeclarationsTwo'),
         );
     }
+
+    public function testConstantParser()
+    {
+        $reader = new Reader(SomeClass::class, "MY_CONST", "constant");
+
+        $parameters = $reader->getParameters();
+
+        $this->assertSame("some value", $parameters["get"]);
+    }
+
+    public function testConstantParserCommon()
+    {
+        $reader = new Reader(SomeClass::class, "MY_OTHER_CONST", "constant");
+
+        $this->commonTest($reader);
+    }
 }
