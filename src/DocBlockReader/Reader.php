@@ -11,21 +11,23 @@ class Reader
     /** @var bool */
     private $parsedAll = false;
 
-    const keyPattern = '[A-z0-9\_\-]+';
-    const endPattern = "[ ]*(?:@|\r\n|\n)";
+    private const keyPattern = '[A-z0-9\_\-]+';
+    private const endPattern = "[ ]*(?:@|\r\n|\n)";
 
-    public function __construct($class, $method = null, $type = null)
+    public const TYPE_METHOD   = "* method";
+    public const TYPE_PROPERTY = "* property";
+    public const TYPE_CONSTANT = "* constant";
+    public const TYPE_FUNCTION = "* function";
+
+    /**
+     * @param $arguments
+     *
+     * @return \ReflectionClass|\ReflectionClassConstant|\ReflectionFunction|\ReflectionMethod|\ReflectionProperty
+     * @throws \ReflectionException
+     */
+    private function create($arguments)
     {
-        if (is_array($class)) {
-            $method = $class[1];
-            $class  = $class[0];
-            $type   = "method";
-        }
-
-        $arguments = array($class);
-
-        $method !== null and $arguments[] = $method;
-        $type !== null and $arguments[] = $type;
+        @list($class, $method, $type) = $arguments;
 
         $count = count($arguments);
 
@@ -34,22 +36,61 @@ class Reader
         if ($count === 0) {
             throw new \DomainException("No zero argument constructor allowed");
         } else if ($count === 1) {
-            if (is_string($arguments[0]) && function_exists($arguments[0])) {
-                $reflection = new \ReflectionFunction($arguments[0]);
+            if (is_string($class) && function_exists($class)) {
+                return new \ReflectionFunction($class);
             } else {
-                $reflection = new \ReflectionClass($arguments[0]);
+                return new \ReflectionClass($class);
             }
         } else {
-            $type = $count === 3 ? $arguments[2] : "method";
+            if ($count === 2) {
+                if ($method === self::TYPE_FUNCTION) {
+                    return new \ReflectionFunction($class);
+                }
 
-            if ($type === "method") {
-                $reflection = new \ReflectionMethod($arguments[0], $arguments[1]);
-            } else if ($type === "property") {
-                $reflection = new \ReflectionProperty($arguments[0], $arguments[1]);
-            } else if ($type === "constant") {
-                $reflection = new \ReflectionClassConstant($arguments[0], $arguments[1]);
+                $type = self::TYPE_METHOD;
+            }
+
+            if ($type === self::TYPE_METHOD) {
+                return new \ReflectionMethod($class, $method);
+            } else if ($type === self::TYPE_PROPERTY) {
+                return new \ReflectionProperty($class, $method);
+            } else if ($type === self::TYPE_CONSTANT) {
+                return new \ReflectionClassConstant($class, $method);
             }
         }
+    }
+
+    /**
+     * Reader constructor.
+     *
+     * $class could be one of the following
+     *
+     * - callable
+     * - class name
+     * - class instance
+     *
+     * throws \ReflectionException
+     * (@ throws annotation is implicitly defined)
+     *
+     * @param mixed       $class
+     * @param null|string $method
+     * @param null|string $type
+     *
+     */
+    public function __construct($class, ?string $method = null, ?string $type = null)
+    {
+        if (is_array($class)) {
+            $method = $class[1];
+            $class  = $class[0];
+            $type   = self::TYPE_METHOD;
+        }
+
+        $arguments = array($class);
+
+        $method !== null and $arguments[] = $method;
+        $type !== null and $arguments[] = $type;
+
+        $reflection = $this->create($arguments);
 
         $this->rawDocBlock = $reflection->getDocComment();
         $this->parameters  = array();

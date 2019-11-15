@@ -24,13 +24,13 @@ class ReaderTest extends TestCase
 
     public function testPropertyParsing()
     {
-        $reader = new Reader(SomeClass::class, 'myVar', 'property');
+        $reader = new Reader(SomeClass::class, 'myVar', Reader::TYPE_PROPERTY);
         $this->commonTest($reader);
     }
 
     public function testPropertyParsing2()
     {
-        $reader = new Reader(SomeClass::class, 'myVar2', 'property');
+        $reader = new Reader(SomeClass::class, 'myVar2', Reader::TYPE_PROPERTY);
         $x      = $reader->getParameter("x");
         $y      = $reader->getParameter("y");
         $this->assertSame(1, $x);
@@ -45,7 +45,7 @@ class ReaderTest extends TestCase
      */
     public function testIssue2Problem()
     {
-        $reader = new Reader(SomeClass::class, 'issue2', 'property');
+        $reader = new Reader(SomeClass::class, 'issue2', Reader::TYPE_PROPERTY);
         $Lalala = $reader->getParameters()["Lalala"];
 
         $this->assertSame(array("somejsonarray", "2", "anotherjsonarray", "3"), $Lalala);
@@ -59,7 +59,7 @@ class ReaderTest extends TestCase
 
     public function testParserMethodExplicit()
     {
-        $reader = new Reader(SomeClass::class, 'parserFixture', 'method');
+        $reader = new Reader(SomeClass::class, 'parserFixture', Reader::TYPE_METHOD);
         $this->commonTest($reader);
     }
 
@@ -245,7 +245,7 @@ class ReaderTest extends TestCase
 
     }
 
-    public function testParseFunction()
+    public function testParseFunctionImplicit()
     {
         include_once __DIR__ . "/model/SomeMethod.php";
 
@@ -254,6 +254,19 @@ class ReaderTest extends TestCase
         $this->assertTrue(function_exists($method));
 
         $reader = new Reader($method);
+
+        $this->commonTest($reader);
+    }
+
+    public function testParseFunctionExplict()
+    {
+        include_once __DIR__ . "/model/SomeMethod.php";
+
+        $method = "\\frostbane\\DocBlockReader\\test\\model\\someMethod";
+
+        $this->assertTrue(function_exists($method));
+
+        $reader = new Reader($method, Reader::TYPE_FUNCTION);
 
         $this->commonTest($reader);
     }
@@ -306,7 +319,7 @@ class ReaderTest extends TestCase
 
     public function testConstantParser()
     {
-        $reader = new Reader(SomeClass::class, "MY_CONST", "constant");
+        $reader = new Reader(SomeClass::class, "MY_CONST", Reader::TYPE_CONSTANT);
 
         $parameters = $reader->getParameters();
 
@@ -315,7 +328,7 @@ class ReaderTest extends TestCase
 
     public function testConstantParserCommon()
     {
-        $reader = new Reader(SomeClass::class, "MY_OTHER_CONST", "constant");
+        $reader = new Reader(SomeClass::class, "MY_OTHER_CONST", Reader::TYPE_CONSTANT);
 
         $this->commonTest($reader);
     }
