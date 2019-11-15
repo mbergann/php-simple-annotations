@@ -1,4 +1,38 @@
-composer.phar
+# syntax:glob
+
+# project files
+.idea/*
 *.sublime-*
-test.php
-vendor
+.viproj*
+.vimproj*
+.project
+.vscode/*
+*.iml
+
+# temporary directories and 3rd party source code directories
+tmp/*
+var/*
+cache/*
+log/*
+logs/*
+docs/*
+dev/.zim/*
+node_modules/*
+vendor/*
+
+# temporary files
+*.tmp
+*.bak
+*.orig
+*.tmp
+
+# composer ignored files
+composer.phar
+composer.lock
+
+# system generated files
+.buildpath
+.settings
+.DS_Store
+Thumbs.db
+desktop.ini

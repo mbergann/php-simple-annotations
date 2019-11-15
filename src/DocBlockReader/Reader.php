@@ -160,9 +160,14 @@ class Reader
 	{
 		if($originalValue && $originalValue !== 'null')
 		{
-			// try to json decode, if cannot then store as string
-			if( ($json = json_decode($originalValue,TRUE)) === NULL)
+			$lower = strtolower($originalValue);
+			if(($lower === "true"  || $lower === "false" || $lower === "null") && $lower !== $originalValue)
 			{
+				$value = $originalValue;
+			}
+			else if( ($json = json_decode($originalValue,TRUE)) === NULL)
+			{
+				// try to json decode, if cannot then store as string
 				$value = $originalValue;
 			}
 			else
