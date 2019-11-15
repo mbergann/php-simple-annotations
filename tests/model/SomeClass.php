@@ -60,6 +60,37 @@ class SomeClass extends TestCase
     private $myVar2;
 
     /**
+     * my constant
+     *
+     * @get some value
+     */
+    const MY_CONST = "shashee";
+
+    /**
+     * @number       1
+     * @string "123"
+     * @string2      abc
+     * @array ["a", "b"]
+     * @string7      akane kitamoto
+     * @object {"x": "y"}
+     * @nested {"x": {"y": "z"}}
+     * @nestedArray {"x": {"y": ["z", "p"]}}
+     *
+     * @trueVar
+     * @null-var     null
+     * @string4 "null"
+     *
+     * @booleanTrue  true
+     * @string3      tRuE
+     * @booleanFalse false
+     * @string5 "true"
+     * @string6 "false"
+     * @booleanNull  null
+     *
+     */
+    const MY_OTHER_CONST = "akane";
+
+    /**
      * @Lalala ["somejsonarray", "2"]
      * @Lalala ["anotherjsonarray", "3"]
      */
