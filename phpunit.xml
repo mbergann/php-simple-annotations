@@ -1,15 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
-<phpunit bootstrap="tests/bootstrap.php">
+<phpunit backupGlobals="false"
+         backupStaticAttributes="false"
+         bootstrap="vendor/autoload.php"
+         colors="true"
+         convertErrorsToExceptions="true"
+         convertNoticesToExceptions="true"
+         convertWarningsToExceptions="true"
+         processIsolation="false"
+         stopOnFailure="true"
+         syntaxCheck="false">
     <testsuites>
         <testsuite name="Simple Annotations Test Suite">
-            <directory>tests/DocBlockReader/</directory>
+            <directory>./tests/DocBlockReader/</directory>
+      <exclude>./test/util</exclude>
+      <exclude>./test/model</exclude>
         </testsuite>
     </testsuites>
-
-    <filter>
-        <whitelist>
-            <directory suffix=".php">src/DocBlockReader/</directory>
-        </whitelist>
-    </filter>
 </phpunit>

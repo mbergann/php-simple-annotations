@@ -1,6 +1,8 @@
 <?php
 
-namespace DocBlockReader;
+namespace frostbane\DocBlockReader\test;
+
+use frostbane\DocBlockReader\Reader;
 
 /**
  * @number 1
@@ -18,7 +20,7 @@ namespace DocBlockReader;
  * @string3 tRuE
  * @booleanFalse false
  * @booleanNull null
- * 
+ *
  */
 class ReaderTest extends \PHPUnit_Framework_TestCase
 {
@@ -38,7 +40,7 @@ class ReaderTest extends \PHPUnit_Framework_TestCase
 	 * @string3 tRuE
 	 * @booleanFalse false
 	 * @booleanNull null
-	 * 
+	 *
 	 */
 	public $myVar = "test";
 
@@ -77,7 +79,7 @@ class ReaderTest extends \PHPUnit_Framework_TestCase
 
 		$this->assertSame(array("somejsonarray", "2", "anotherjsonarray", "3"), $Lalala);
 	}
-	
+
 	public function testParserOne()
 	{
 		$reader = new Reader($this, 'parserFixture');
@@ -151,7 +153,7 @@ class ReaderTest extends \PHPUnit_Framework_TestCase
 		$this->assertSame(TRUE, $parameters['booleanTrue']);
 		$this->assertSame("tRuE", $parameters['string3']);
 		$this->assertSame(FALSE, $parameters['booleanFalse']);
-		$this->assertSame(NULL, $parameters['booleanNull']);		
+		$this->assertSame(NULL, $parameters['booleanNull']);
 	}
 
 	public function testParserTwo()
@@ -184,7 +186,7 @@ class ReaderTest extends \PHPUnit_Framework_TestCase
 	 * @string3 tRuE
 	 * @booleanFalse false
 	 * @booleanNull null
-	 * 
+	 *
 	 */
 	private function parserFixture()
 	{
