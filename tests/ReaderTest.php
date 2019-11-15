@@ -2,76 +2,21 @@
 
 namespace frostbane\DocBlockReader\test;
 
-use frostbane\DocBlockReader\Reader;
 use PHPUnit\Framework\TestCase;
+use frostbane\DocBlockReader\Reader;
+use frostbane\DocBlockReader\test\model\SomeClass;
 
-/**
- * @number       1
- * @string "123"
- * @string2      abc
- * @array ["a", "b"]
- * @object {"x": "y"}
- * @nested {"x": {"y": "z"}}
- * @nestedArray {"x": {"y": ["z", "p"]}}
- *
- * @trueVar
- * @null-var     null
- * @string4 "null"
- *
- * @booleanTrue  true
- * @string3      tRuE
- * @booleanFalse false
- * @string5 "true"
- * @string6 "false"
- * @booleanNull  null
- *
- */
 class ReaderTest extends TestCase
 {
-    /**
-     * @number       1
-     * @string "123"
-     * @string2      abc
-     * @array ["a", "b"]
-     * @object {"x": "y"}
-     * @nested {"x": {"y": "z"}}
-     * @nestedArray {"x": {"y": ["z", "p"]}}
-     *
-     * @trueVar
-     * @null-var     null
-     * @string4 "null"
-     *
-     * @booleanTrue  true
-     * @string3      tRuE
-     * @booleanFalse false
-     * @string5 "true"
-     * @string6 "false"
-     * @booleanNull  null
-     *
-     */
-    public $myVar = "test";
-
-    /**
-     * @x 1
-     * @y yes!
-     */
-    private $myVar2;
-
-    /**
-     * @Lalala ["somejsonarray", "2"]
-     * @Lalala ["anotherjsonarray", "3"]
-     */
-    public $issue2;
-
     public function testPropertyParsing()
     {
-        $reader = new Reader($this, 'myVar', 'property');
+        $reader = new Reader(SomeClass::class, 'myVar', 'property');
         $this->commonTest($reader);
     }
 
     public function testPropertyParsing2()
     {
-        $reader = new Reader($this, 'myVar2', 'property');
+        $reader = new Reader(SomeClass::class, 'myVar2', 'property');
         $x      = $reader->getParameter("x");
         $y      = $reader->getParameter("y");
         $this->assertSame(1, $x);
@@ -80,13 +25,13 @@ class ReaderTest extends TestCase
 
     /**
      * Issue:
-     * https://github.com/jan-swiecki/php-simple-annotations/issues/2
-     * Thanks to @KrekkieD (https://github.com/KrekkieD) for
-     * reporting this issue!
+     * @see https://github.com/jan-swiecki/php-simple-annotations/issues/2
+     *      Thanks to @KrekkieD (https://github.com/KrekkieD) for
+     *      reporting this issue!
      */
     public function testIssue2Problem()
     {
-        $reader = new Reader($this, 'issue2', 'property');
+        $reader = new Reader(SomeClass::class, 'issue2', 'property');
         $Lalala = $reader->getParameters()["Lalala"];
 
         $this->assertSame(array("somejsonarray", "2", "anotherjsonarray", "3"), $Lalala);
@@ -94,7 +39,7 @@ class ReaderTest extends TestCase
 
     public function testParserOne()
     {
-        $reader = new Reader($this, 'parserFixture');
+        $reader = new Reader(SomeClass::class, 'parserFixture');
         $this->commonTest($reader);
     }
 
@@ -142,7 +87,7 @@ class ReaderTest extends TestCase
 
     public function testParserOneFromClass()
     {
-        $reader     = new Reader($this);
+        $reader     = new Reader(SomeClass::class);
         $parameters = $reader->getParameters();
 
         $this->assertNotEmpty($parameters);
@@ -178,7 +123,7 @@ class ReaderTest extends TestCase
 
     public function testParserTwo()
     {
-        $reader = new Reader($this, 'parserFixture');
+        $reader = new Reader(SomeClass::class, 'parserFixture');
 
         $this->assertSame(1, $reader->getParameter('number'));
         $this->assertSame("123", $reader->getParameter('string'));
@@ -190,45 +135,16 @@ class ReaderTest extends TestCase
         $this->assertSame(null, $reader->getParameter('non-existent'));
     }
 
-    /**
-     * @number       1
-     * @string "123"
-     * @string2      abc
-     * @array ["a", "b"]
-     * @object {"x": "y"}
-     * @nested {"x": {"y": "z"}}
-     * @nestedArray {"x": {"y": ["z", "p"]}}
-     *
-     * @trueVar
-     * @null-var     null
-     * @string4 "null"
-     *
-     * @booleanTrue  true
-     * @string3      tRuE
-     * @booleanFalse false
-     * @string5 "true"
-     * @string6 "false"
-     * @booleanNull  null
-     *
-     */
-    private function parserFixture()
-    {
-    }
-
     public function testParserEmpty()
     {
-        $reader     = new Reader($this, 'parserEmptyFixture');
+        $reader     = new Reader(SomeClass::class, 'parserEmptyFixture');
         $parameters = $reader->getParameters();
         $this->assertSame(array(), $parameters);
     }
 
-    private function parserEmptyFixture()
-    {
-    }
-
     public function testParserMulti()
     {
-        $reader     = new Reader($this, 'parserMultiFixture');
+        $reader     = new Reader(SomeClass::class, 'parserMultiFixture');
         $parameters = $reader->getParameters();
 
         $this->assertNotEmpty($parameters);
@@ -244,21 +160,9 @@ class ReaderTest extends TestCase
 
     }
 
-    /**
-     * @var x
-     * @var2 1024
-     *
-     * @param string x
-     * @param integer y
-     * @param array z
-     */
-    private function parserMultiFixture()
-    {
-    }
-
     public function testParserThree()
     {
-        $reader = new Reader($this, 'fixtureThree');
+        $reader = new Reader(SomeClass::class, 'fixtureThree');
         // $allowedRequest = $reader->getParameter("allowedRequest");
 
         $postParam = $reader->getParameter("postParam");
@@ -266,20 +170,9 @@ class ReaderTest extends TestCase
         $this->assertNotEmpty($postParam);
     }
 
-    /**
-     * @allowedRequest ["ajax", "post"]
-     * @postParam integer orderId
-     * @postParam array productIds
-     * @postParam string newValue
-     */
-    private function fixtureThree()
-    {
-
-    }
-
     public function testParserFour()
     {
-        $reader = new Reader($this, 'fixtureFour');
+        $reader = new Reader(SomeClass::class, 'fixtureFour');
 
         $this->assertSame(true, $reader->getParameter('get'));
         $this->assertSame(true, $reader->getParameter('post'));
@@ -289,7 +182,7 @@ class ReaderTest extends TestCase
 
     public function testParserFourBis()
     {
-        $reader = new Reader($this, 'fixtureFour');
+        $reader = new Reader(SomeClass::class, 'fixtureFour');
 
         $parameters = $reader->getParameters();
 
@@ -305,21 +198,10 @@ class ReaderTest extends TestCase
 
     }
 
-    /**
-     * @get @post
-     * @ajax
-     * @postParam x
-     * @postParam y
-     * @postParam z
-     */
-    private function fixtureFour()
-    {
-    }
-
     public function testFive()
     {
-        $reader1 = new Reader($this, 'fixtureFive');
-        $reader2 = new Reader($this, 'fixtureFive');
+        $reader1 = new Reader(SomeClass::class, 'fixtureFive');
+        $reader2 = new Reader(SomeClass::class, 'fixtureFive');
 
         $parameters1 = $reader1->getParameters();
 
@@ -330,17 +212,9 @@ class ReaderTest extends TestCase
 
     }
 
-    /**
-     * @trueVar1
-     * @trueVar2
-     */
-    private function fixtureFive()
-    {
-    }
-
     public function testVariableDeclarations()
     {
-        $reader       = new Reader($this, 'fixtureVariableDeclarations');
+        $reader       = new Reader(SomeClass::class, 'fixtureVariableDeclarations');
         $declarations = $reader->getVariableDeclarations("param");
         $this->assertNotEmpty($declarations);
 
@@ -351,35 +225,15 @@ class ReaderTest extends TestCase
     }
 
     /**
-     * @param string var1
-     * @param integer var2
-     */
-    private function fixtureVariableDeclarations()
-    {
-    }
-
-    /**
      * @dataProvider badVariableDataProvider
-     * @expectedException InvalidArgumentException
      */
     public function testBadVariableDeclarations($methodName)
     {
-        $reader       = new Reader($this, $methodName);
-        $declarations = $reader->getVariableDeclarations("param");
-    }
+        $this->expectException(\InvalidArgumentException::class);
 
-    /**
-     * @param false
-     */
-    private function fixtureBadVariableDeclarationsOne()
-    {
-    }
+        $reader = new Reader(SomeClass::class, $methodName);
 
-    /**
-     * @param true
-     */
-    private function fixtureBadVariableDeclarationsTwo()
-    {
+        $reader->getVariableDeclarations("param");
     }
 
     public function badVariableDataProvider()

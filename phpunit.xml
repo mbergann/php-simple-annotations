@@ -10,7 +10,7 @@
          stopOnFailure="true">
     <testsuites>
         <testsuite name="Simple Annotations Test Suite">
-            <directory>./tests/DocBlockReader/</directory>
+            <directory>./tests/</directory>
       <exclude>./test/util</exclude>
       <exclude>./test/model</exclude>
         </testsuite>
