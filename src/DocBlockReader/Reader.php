@@ -2,10 +2,6 @@
 
 namespace frostbane\DocBlockReader;
 
-class ReaderException extends \Exception
-{
-}
-
 class Reader
 {
     private $rawDocBlock;
