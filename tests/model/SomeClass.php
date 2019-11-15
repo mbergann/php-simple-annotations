@@ -9,6 +9,7 @@ use PHPUnit\Framework\TestCase;
  * @number       1
  * @string "123"
  * @string2      abc
+ * @string7      akane kitamoto
  * @array ["a", "b"]
  * @object {"x": "y"}
  * @nested {"x": {"y": "z"}}
@@ -33,6 +34,7 @@ class SomeClass extends TestCase
      * @string "123"
      * @string2      abc
      * @array ["a", "b"]
+     * @string7      akane kitamoto
      * @object {"x": "y"}
      * @nested {"x": {"y": "z"}}
      * @nestedArray {"x": {"y": ["z", "p"]}}
@@ -67,6 +69,7 @@ class SomeClass extends TestCase
      * @number       1
      * @string "123"
      * @string2      abc
+     * @string7      akane kitamoto
      * @array ["a", "b"]
      * @object {"x": "y"}
      * @nested {"x": {"y": "z"}}

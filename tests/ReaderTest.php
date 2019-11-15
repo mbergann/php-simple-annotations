@@ -43,6 +43,9 @@ class ReaderTest extends TestCase
         $this->commonTest($reader);
     }
 
+    /**
+     * @param Reader $reader
+     */
     public function commonTest($reader)
     {
         $parameters = $reader->getParameters();
@@ -56,6 +59,7 @@ class ReaderTest extends TestCase
         $this->assertArrayHasKey('string4', $parameters);
         $this->assertArrayHasKey('string5', $parameters);
         $this->assertArrayHasKey('string6', $parameters);
+        $this->assertArrayHasKey('string7', $parameters);
         $this->assertArrayHasKey('array', $parameters);
         $this->assertArrayHasKey('object', $parameters);
         $this->assertArrayHasKey('nested', $parameters);
@@ -83,6 +87,9 @@ class ReaderTest extends TestCase
         $this->assertSame("false", $parameters['string6']);
         $this->assertSame(false, $parameters['booleanFalse']);
         $this->assertSame(null, $parameters['booleanNull']);
+        $this->assertSame("null", $parameters['string4']);
+        $this->assertSame("akane kitamoto", $parameters['string7']);
+        $this->assertNull($reader->getParameter("non_existent_key"));
     }
 
     public function testParserOneFromClass()
