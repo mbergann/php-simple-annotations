@@ -4,11 +4,15 @@ namespace frostbane\DocBlockReader;
 
 class Reader
 {
+    /** @var string */
     private $rawDocBlock;
+    /** @var array */
     private $parameters;
-    private $keyPattern = "[A-z0-9\_\-]+";
-    private $endPattern = "[ ]*(?:@|\r\n|\n)";
-    private $parsedAll  = false;
+    /** @var bool */
+    private $parsedAll = false;
+
+    const keyPattern = '[A-z0-9\_\-]+';
+    const endPattern = "[ ]*(?:@|\r\n|\n)";
 
     public function __construct()
     {
@@ -28,8 +32,8 @@ class Reader
                 $reflection = new \ReflectionMethod($arguments[0], $arguments[1]);
             } else if ($type === "property") {
                 $reflection = new \ReflectionProperty($arguments[0], $arguments[1]);
-			} else if($type === "constant") {
-				$reflection = new \ReflectionClassConstant($arguments[0], $arguments[1]);
+            } else if ($type === "constant") {
+                $reflection = new \ReflectionClassConstant($arguments[0], $arguments[1]);
             }
         }
 
@@ -37,15 +41,19 @@ class Reader
         $this->parameters  = array();
     }
 
+    /**
+     * @param  string $key
+     * @return mixed
+     */
     private function parseSingle($key)
     {
         if (isset($this->parameters[$key])) {
             return $this->parameters[$key];
         } else {
-            if (preg_match("/@" . preg_quote($key) . $this->endPattern . "/", $this->rawDocBlock, $match)) {
+            if (preg_match("/@" . preg_quote($key) . self::endPattern . "/", $this->rawDocBlock, $match)) {
                 return true;
             } else {
-                preg_match_all("/@" . preg_quote($key) . " (.*)" . $this->endPattern . "/U", $this->rawDocBlock, $matches);
+                preg_match_all("/@" . preg_quote($key) . " (.*)" . self::endPattern . "/U", $this->rawDocBlock, $matches);
                 $size = sizeof($matches[1]);
 
                 // not found
@@ -69,19 +77,19 @@ class Reader
 
     private function parse()
     {
-        $pattern = "/@(?=(.*)" . $this->endPattern . ")/U";
+        $pattern = "/@(?=(.*)" . self::endPattern . ")/U";
 
         preg_match_all($pattern, $this->rawDocBlock, $matches);
 
         foreach ($matches[1] as $rawParameter) {
-            if (preg_match("/^(" . $this->keyPattern . ") (.*)$/", $rawParameter, $match)) {
+            if (preg_match("/^(" . self::keyPattern . ") (.*)$/", $rawParameter, $match)) {
                 $parsedValue = $this->parseValue($match[2]);
                 if (isset($this->parameters[$match[1]])) {
                     $this->parameters[$match[1]] = array_merge((array)$this->parameters[$match[1]], (array)$parsedValue);
                 } else {
                     $this->parameters[$match[1]] = $parsedValue;
                 }
-            } else if (preg_match("/^" . $this->keyPattern . "$/", $rawParameter, $match)) {
+            } else if (preg_match("/^" . self::keyPattern . "$/", $rawParameter, $match)) {
                 $this->parameters[$rawParameter] = true;
             } else {
                 $this->parameters[$rawParameter] = null;
@@ -89,6 +97,9 @@ class Reader
         }
     }
 
+    /**
+     * @param string $name
+     */
     public function getVariableDeclarations($name)
     {
         $declarations = (array)$this->getParameter($name);
@@ -105,8 +116,7 @@ class Reader
         $type = gettype($declaration);
 
         if ($type !== 'string') {
-            throw new \InvalidArgumentException(
-                "Raw declaration must be string, $type given. Key='$name'.");
+            throw new \InvalidArgumentException("Raw declaration must be string, $type given. Key='$name'.");
         }
 
         if (strlen($declaration) === 0) {
@@ -129,6 +139,10 @@ class Reader
         return $declaration;
     }
 
+    /**
+     * @param  string $originalValue
+     * @return mixed
+     */
     private function parseValue($originalValue)
     {
         if ($originalValue && $originalValue !== 'null') {
@@ -153,6 +167,9 @@ class Reader
         return $value;
     }
 
+    /**
+     * @return array
+     */
     public function getParameters()
     {
         if (!$this->parsedAll) {
@@ -163,6 +180,9 @@ class Reader
         return $this->parameters;
     }
 
+    /**
+     * @param string $key
+     */
     public function getParameter($key)
     {
         return $this->parseSingle($key);
