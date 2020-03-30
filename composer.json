@@ -1,8 +1,8 @@
 {
-    "name"        : "frostbane/php-simple-annotations",
+    "name"        : "mbergann/php-simple-annotations",
     "description" : "Simple annotation parser",
     "type"        : "package",
-    "homepage"    : "https://frostbane.nodetransit.com",
+    "homepage"    : "https://www.coderey.de",
     "keywords"    : [
         "annotations",
         "annotation",
@@ -17,8 +17,18 @@
             "role" : "Developer"
         },
         {
+            "name" : "USAMI Kenta",
+            "email": "tadsan@zonu.me",
+            "role" : "Developer"
+        },
+        {
             "name" : "frostbane",
             "email": "frostbane@programmer.net",
+            "role" : "Developer"
+        },
+        {
+            "name" : "Martin Bergann",
+            "email": "martin@knipserey.de",
             "role" : "Developer"
         }
     ],
@@ -30,12 +40,12 @@
     },
     "autoload"    : {
         "psr-4": {
-            "frostbane\\": "src/"
+            "Coderey\\": "src/"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "frostbane\\DocBlockReader\\test\\": "tests/"
+            "Coderey\\DocBlockReader\\test\\": "tests/"
         }
     }
 }

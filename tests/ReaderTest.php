@@ -1,11 +1,11 @@
 <?php
 
-namespace frostbane\DocBlockReader\test;
+namespace Coderey\DocBlockReader\test;
 
-use function frostbane\DocBlockReader\test\model\someMethod;
+use function Coderey\DocBlockReader\test\model\someMethod;
 use PHPUnit\Framework\TestCase;
-use frostbane\DocBlockReader\Reader;
-use frostbane\DocBlockReader\test\model\SomeClass;
+use Coderey\DocBlockReader\Reader;
+use Coderey\DocBlockReader\test\model\SomeClass;
 
 class ReaderTest extends TestCase
 {
@@ -249,7 +249,7 @@ class ReaderTest extends TestCase
     {
         include_once __DIR__ . "/model/SomeMethod.php";
 
-        $method = "\\frostbane\\DocBlockReader\\test\\model\\someMethod";
+        $method = "\\Coderey\\DocBlockReader\\test\\model\\someMethod";
 
         $this->assertTrue(function_exists($method));
 
@@ -262,7 +262,7 @@ class ReaderTest extends TestCase
     {
         include_once __DIR__ . "/model/SomeMethod.php";
 
-        $method = "\\frostbane\\DocBlockReader\\test\\model\\someMethod";
+        $method = "\\Coderey\\DocBlockReader\\test\\model\\someMethod";
 
         $this->assertTrue(function_exists($method));
 

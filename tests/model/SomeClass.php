@@ -1,8 +1,8 @@
 <?php
 
-namespace frostbane\DocBlockReader\test\model;
+namespace Coderey\DocBlockReader\test\model;
 
-use frostbane\DocBlockReader\Reader;
+use Coderey\DocBlockReader\Reader;
 use PHPUnit\Framework\TestCase;
 
 /**

@@ -1,5 +1,12 @@
 # PHP Simple Annotations
 
+THis is a fork of https://github.com/frostbane/php-simple-annotations ...
+
+which is a fork of https://github.com/jan-swiecki/php-simple-annotations
+
+
+The following readme is from frostbane's version... I will update this when I finished my changes
+
 ## Installation
 
 Get [composer](http://getcomposer.org/) and learn to use it.
@@ -12,7 +19,7 @@ If you refuse to use composer then instead of `include_once "vendor/autoload.php
 
 You need [PHPUnit](https://github.com/sebastianbergmann/phpunit/). After you get it run:
 
-    > git clone https://github.com/frostbane/php-simple-annotations
+    > git clone https://github.com/frostbane/php-simple-annotations.git
     > cd php-simple-annotations
     > composer install
     > phpunit
@@ -23,6 +30,8 @@ This library gives you the ability to extract and auto-parse DocBlock comment bl
 
 Example:
 ```php
+    use frostbane\DocBlockReader\Reader;
+
     class TestClass {
       /**
        * @x 1
@@ -31,7 +40,7 @@ Example:
       private $myVar;
     }
 
-    $reader = new \frostbane\DocBlockReader\Reader('TestClass', 'myVar', 'property');
+    $reader = new Reader('TestClass', 'myVar', Reader::TYPE_PROPERTY);
     $x = $reader->getParameter("x"); // 1 (with number type)
     $y = $reader->getParameter("y"); // "yes!" (with string type)
  ```
@@ -40,12 +49,15 @@ So as you can see to do this you need to construct `Reader` object and target it
 
 You can point at classes, class methods and class properties.
 
-* Targeting class: `$reader = new \frostbane\DocBlockReader\Reader(String $className)`
-* Targeting method or property: `$reader = new \frostbane\DocBlockReader\Reader(String $className, String $name [, String $type = 'method'])`
+Namespace: `frostbane\DocBlockReader`
+
+* Targeting class: `$reader = new Reader(String $className)`
+* Targeting method or property: `$reader = new Reader(String $className, String $name [, String $type = Reader::TYPE_METHOD])`
 
  This will initialize DocBlock Reader on method `$className::$name` or property `$className::$name`.
 
- To choose method use only two arguments or provide third argument as `method` string value. To get property value put `property` string value in third argument.
+ To choose method use only two arguments or provide third argument as `method` string value.
+ To get property value put `property` string value in third argument.
 
 To extract parsed properties you have two methods:
 
@@ -82,19 +94,43 @@ To extract parsed properties you have two methods:
 
 ## API
 
-* Constructor `$reader = new \frostbane\DocBlockReader\Reader(String $className [, String $name [, String $type = 'method'] ])`
+### Namespace
 
-  Creates `Reader` pointing at class, class method or class property - based on provided arguments (see Introduction).
+    `frostbane\DocBlockReader`
 
-* `$reader->getParameter(String $key)`
+### Constructor
+
+    `$reader = new Reader(string $className [, string $name [, string $type = Reader::TYPE_METHOD] ])`
+
+  Creates `Reader` pointing at class, class method or class property -
+  based on provided arguments (see Introduction).
+
+    `$reader = new Reader(array(string $className, string $method))`
+    `$reader = new Reader(array(object $instance, string $method))`
+
+  Creates `Reader` pointing at the callable `$instance->{$method}`
+
+    `$reader = new Reader(string $functionName [, Reader::TYPE_FUNCTION])`
+
+  Creates `Reader` pointing at the callable `$instance->{$method}`
+
+### get parameter
+
+    `$reader->getParameter(String $key)`
 
  Returns value of parameter `$key` extracted from DocBlock.
 
-* `$reader->getParameters()`
+### get all parameters
+
+    `$reader->getParameters()`
 
  returns array of all parameters (see examples below).
 
-* `$reader->getVariableDeclarations()` - See last example below.
+### get variable declaration
+
+    `$reader->getVariableDeclarations()`
+
+  See last example below.
 
 
 ## Examples

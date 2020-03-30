@@ -1,6 +1,6 @@
 <?php
 
-namespace frostbane\DocBlockReader\test\model;
+namespace Coderey\DocBlockReader\test\model;
 
 /**
  * @number       1

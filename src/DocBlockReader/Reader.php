@@ -1,6 +1,6 @@
 <?php
 
-namespace frostbane\DocBlockReader;
+namespace Coderey\DocBlockReader;
 
 class Reader
 {
@@ -155,6 +155,8 @@ class Reader
 
     /**
      * @param string $name
+     *
+     * @return array
      */
     public function getVariableDeclarations($name)
     {
@@ -225,6 +227,8 @@ class Reader
     }
 
     /**
+     * Get the values of all the annotations
+     *
      * @return array
      */
     public function getParameters()
@@ -238,10 +242,20 @@ class Reader
     }
 
     /**
+     * Get the value of the annotation.
+     *
      * @param string $key
+     *
+     * @return mixed value of the annotation
+     * @return null if the annotation does not exist
      */
     public function getParameter($key)
     {
         return $this->parseSingle($key);
+    }
+
+    public function getRawDocBlock()
+    {
+        return $this->rawDocBlock;
     }
 }

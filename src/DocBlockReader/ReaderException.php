@@ -1,6 +1,6 @@
 <?php
 
-namespace frostbane\DocBlockReader;
+namespace Coderey\DocBlockReader;
 
 class ReaderException extends \Exception
 {
