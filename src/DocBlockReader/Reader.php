@@ -284,14 +284,16 @@ class Reader
 
         $i = 1;
         //skip leading empty lines
-        while (trim($lines[$i]) == '') {
+        while (isset($lines[$i]) && trim($lines[$i]) == '') {
             $i++;
         }
 
-        $descriptions['short'] = $lines[$i++];
+        if (isset($lines[$i])) {
+            $descriptions['short'] = $lines[$i++];
+        }
 
         //skip leading empty lines
-        while (trim($lines[$i]) == '') {
+        while (isset($lines[$i]) && trim($lines[$i]) == '') {
             $i++;
         }
 
