@@ -254,8 +254,66 @@ class Reader
         return $this->parseSingle($key);
     }
 
+    /**
+     * return the complete DocBlock
+     *
+     * @return string
+     */
     public function getRawDocBlock()
     {
         return $this->rawDocBlock;
+    }
+
+    /**
+     * @return array
+     */
+    public function getDescriptions()
+    {
+        $descriptions = [
+            'short' => '',
+            'long'  => '',
+        ];
+
+        $lines = explode(PHP_EOL, $this->rawDocBlock);
+        foreach ($lines as $i => $line) {
+            $lines[$i] = preg_replace('/^\s*\*\s*/i', '', $line);
+            if ($lines[$i] == '/**' || preg_match('/^\s*\**\/$/i', $lines[$i])) {
+                unset($lines[$i]);
+            }
+        }
+
+        $i = 1;
+        //skip leading empty lines
+        while (trim($lines[$i]) == '') {
+            $i++;
+        }
+
+        $descriptions['short'] = $lines[$i++];
+
+        //skip leading empty lines
+        while (trim($lines[$i]) == '') {
+            $i++;
+        }
+
+        //add long-description lines
+        $long = [];
+        while (isset($lines[$i]) && strpos(trim($lines[$i]), '@') !== 0) {
+            $long[] = $lines[$i++];
+        }
+
+        //remove trailing empty lines
+        $long_reverse = array_reverse($long);
+        foreach ($long_reverse as $val) {
+            if (trim($val) == '') {
+                array_pop($long);
+            } else {
+                //break on first non-empty line
+                break;
+            }
+        }
+
+        $descriptions['long'] = implode(PHP_EOL, $long);
+
+        return $descriptions;
     }
 }
