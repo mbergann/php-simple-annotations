@@ -33,7 +33,7 @@
         }
     ],
     "require"     : {
-        "php": ">=7.1.33"
+        "php": "^7.1"
     },
     "require-dev" : {
         "phpunit/phpunit": "^7"
